@@ -80,7 +80,8 @@ export default async function handler(req, res) {
         console.log("Sending request to Python backend...");
 
         // Try connecting to Python backend with explicit IP
-        const pythonUrl = "http://127.0.0.1:8000/compare";
+        const pythonUrl =
+          "http://bwo0gs8cggcsosgws0wksgkc.85.31.233.94.sslip.io/compare";
         console.log("Using Python backend URL:", pythonUrl);
 
         // Use axios instead of node-fetch

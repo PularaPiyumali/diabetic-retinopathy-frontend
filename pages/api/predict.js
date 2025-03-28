@@ -48,10 +48,13 @@ export default async function handler(req, res) {
         formDataToSend.append("file", blob, fileName);
 
         console.log("Sending request to Python backend...");
-        const pythonResponse = await fetch("http://127.0.0.1:8000/predict", {
-          method: "POST",
-          body: formDataToSend,
-        });
+        const pythonResponse = await fetch(
+          "http://bwo0gs8cggcsosgws0wksgkc.85.31.233.94.sslip.io/predict",
+          {
+            method: "POST",
+            body: formDataToSend,
+          }
+        );
 
         if (!pythonResponse.ok) {
           throw new Error(
