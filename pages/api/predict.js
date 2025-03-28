@@ -49,7 +49,7 @@ export default async function handler(req, res) {
 
         console.log("Sending request to Python backend...");
         const pythonResponse = await fetch(
-          "http://bwo0gs8cggcsosgws0wksgkc.85.31.233.94.sslip.io/predict",
+          `${process.env.PYTHON_BACKEND_API}/predict`,
           {
             method: "POST",
             body: formDataToSend,
