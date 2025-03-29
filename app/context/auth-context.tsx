@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       const userData = {
         email,
-        name: email.split("@")[0], // Just for demo
+        name: email,
         isLoggedIn: true,
       };
 

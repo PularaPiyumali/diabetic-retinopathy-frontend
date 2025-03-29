@@ -7,8 +7,15 @@ import { AuthProvider } from "./context/auth-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "DR Detection & Monitoring",
+  title: "PrismEye - DR Detection & Monitoring",
   description: "Revolutionizing Diabetic Retinopathy Diagnosis and Monitoring",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/icon.jpg", type: "image/png", sizes: "32x32" },
+    ],
+    apple: { url: "/apple-icon.png", sizes: "180x180" },
+  },
 };
 
 export default function RootLayout({

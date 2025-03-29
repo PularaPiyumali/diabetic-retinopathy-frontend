@@ -14,10 +14,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // Use a more flexible form parser
   const form = formidable({
     keepExtensions: true,
-    multiples: true, // Required for arrays of files
+    multiples: true, //For arrays of files
   });
 
   return new Promise((resolve, reject) => {
@@ -28,11 +27,9 @@ export default async function handler(req, res) {
         return resolve();
       }
 
-      // Debugging: Log the files received
       console.log("Files received:", Object.keys(files));
 
       try {
-        // Check if files were provided
         const baselineImageFile = files.baselineImage;
         const followUpImageFile = files.followUpImage;
 
@@ -43,7 +40,6 @@ export default async function handler(req, res) {
           return resolve();
         }
 
-        // Log file information for debugging
         console.log(
           "Baseline file:",
           baselineImageFile[0].originalFilename,
@@ -55,10 +51,10 @@ export default async function handler(req, res) {
           followUpImageFile[0].mimetype
         );
 
-        // Create form data using form-data package instead of formdata-node
+        //Create form data using form-data package instead of formdata-node
         const formData = new FormData();
 
-        // Add files to form data with exact parameter names matching FastAPI
+        //Add files to form data with exact parameter names matching FastAPI
         formData.append(
           "baseline_file",
           fs.createReadStream(baselineImageFile[0].filepath),
@@ -79,11 +75,10 @@ export default async function handler(req, res) {
 
         console.log("Sending request to Python backend...");
 
-        // Try connecting to Python backend with explicit IP
+        //Connecting to Python backend with explicit IP
         const pythonUrl = `${process.env.PYTHON_BACKEND_API}/compare`;
         console.log("Using Python backend URL:", pythonUrl);
 
-        // Use axios instead of node-fetch
         const pythonResponse = await axios.post(pythonUrl, formData, {
           headers: {
             ...formData.getHeaders(),
@@ -98,13 +93,12 @@ export default async function handler(req, res) {
       } catch (error) {
         console.error("Error processing request:", error);
 
-        // Provide more detailed error message
         let errorMessage = "Failed to process images";
         let details = undefined;
 
         if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
+          //The request was made and the server responded with a status code
+          //that falls out of the range of 2xx
           console.error("Python backend error response:", error.response.data);
           errorMessage = "Backend responded with error";
           details =
@@ -114,14 +108,14 @@ export default async function handler(req, res) {
                 )}`
               : undefined;
         } else if (error.request) {
-          // The request was made but no response was received
+          //The request was made but no response was received
           errorMessage = "No response from backend server";
           details =
             process.env.NODE_ENV === "development"
               ? "Connection failed or timed out"
               : undefined;
         } else {
-          // Something happened in setting up the request that triggered an Error
+          //Something happened in setting up the request that triggered an Error
           details =
             process.env.NODE_ENV === "development" ? error.message : undefined;
         }
@@ -129,7 +123,7 @@ export default async function handler(req, res) {
         res.status(500).json({ error: errorMessage, details });
         resolve();
       } finally {
-        // Clean up temporary files
+        //Clean up temporary files
         if (files.baselineImage?.[0]?.filepath) {
           try {
             fs.unlinkSync(files.baselineImage[0].filepath);

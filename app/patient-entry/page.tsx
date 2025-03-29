@@ -6,6 +6,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "../components/ui/button";
 import { Clipboard, Eye, Activity } from "lucide-react";
+import { useAuth } from "../context/auth-context";
+import { v4 as uuidv4 } from "uuid";
 
 type PatientData = {
   fullName: string;
@@ -18,15 +20,17 @@ type PatientData = {
 
 const PatientEntryPage = () => {
   const router = useRouter();
+  const { user } = useAuth();
   const [patientData, setPatientData] = useState<PatientData>({
     fullName: "",
     age: "",
     gender: "",
     medicalHistory: "",
     contactNumber: "",
-    email: "",
+    email: user?.email || "",
   });
   const [errors, setErrors] = useState<Partial<PatientData>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -86,13 +90,50 @@ const PatientEntryPage = () => {
     return isValid;
   };
 
-  const handleSubmit = (destination: "detection" | "monitoring") => {
-    if (validateForm()) {
-      // Store patient data in session storage
-      sessionStorage.setItem("patientData", JSON.stringify(patientData));
+  const handleSubmit = async (destination: "detection" | "monitoring") => {
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Generate a unique patient ID if not exists
+      const patientId = sessionStorage.getItem("currentPatientId") || uuidv4();
+
+      // Prepare patient data with user ID
+      const patientWithUserId = {
+        ...patientData,
+        userId: user?.email || "anonymous",
+        patientId,
+      };
+
+      // Save to MongoDB
+      const response = await fetch("/api/patients", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(patientWithUserId),
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.error || "Failed to save patient data");
+      }
+
+      // Store patient data and ID in session storage
+      sessionStorage.setItem("patientData", JSON.stringify(patientWithUserId));
+      sessionStorage.setItem("currentPatientId", patientId);
 
       // Navigate to the selected page
       router.push(`/${destination}`);
+    } catch (error) {
+      console.error("Error saving patient data:", error);
+      alert("Failed to save patient data. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

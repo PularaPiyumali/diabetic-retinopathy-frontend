@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
-import { Upload } from "lucide-react";
+import { Activity, Upload } from "lucide-react";
 import Image from "next/image";
 import router from "next/router";
+import DiagnosisDisclaimer from "../components/DiagnosisDisclaimer";
 
 type DetectionResult = {
   severity: string;
@@ -12,6 +13,7 @@ type DetectionResult = {
 };
 
 type PatientData = {
+  patientId?: string;
   fullName: string;
   age: string;
   gender: string;
@@ -27,6 +29,9 @@ const DRDetectionPage = () => {
     useState<DetectionResult | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [patientData, setPatientData] = useState<PatientData | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [diagnosisSaved, setDiagnosisSaved] = useState(false);
 
   useEffect(() => {
     // Retrieve patient data from session storage
@@ -52,11 +57,16 @@ const DRDetectionPage = () => {
       setErrorMessage(null);
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
+      // Reset detection result when a new file is selected
+      setDetectionResult(null);
+      setDiagnosisSaved(false);
     }
   };
 
   const handleAnalyze = async () => {
     if (!selectedFile) return;
+    setIsAnalyzing(true);
+    setErrorMessage(null);
     console.log("Starting analysis...");
 
     const formData = new FormData();
@@ -89,10 +99,51 @@ const DRDetectionPage = () => {
 
         setErrorMessage(null);
         console.log("Analysis complete, result set");
+
+        saveDiagnosisToDatabase();
       }
     } catch (error) {
       console.error("Error during analysis:", error);
       setErrorMessage("Failed to analyze the image. Please try again.");
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const saveDiagnosisToDatabase = async () => {
+    if (!detectionResult || !patientData || !patientData.patientId) return;
+
+    setIsSaving(true);
+
+    try {
+      const diagnosisData = {
+        patientId: patientData.patientId,
+        patientName: patientData.fullName,
+        diagnosisType: "detection",
+        result: detectionResult,
+        timestamp: new Date().toISOString(),
+      };
+
+      const response = await fetch("/api/diagnosis", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(diagnosisData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setDiagnosisSaved(true);
+        console.log("Diagnosis saved successfully");
+      } else {
+        throw new Error(result.error || "Failed to save diagnosis");
+      }
+    } catch (error) {
+      console.error("Error saving diagnosis:", error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -175,11 +226,11 @@ const DRDetectionPage = () => {
       </div>
       <div className="flex justify-center mt-4">
         <Button
-          onClick={handleAnalyze}
-          disabled={!selectedFile}
+          onClick={handleAnalyze || saveDiagnosisToDatabase}
+          disabled={!selectedFile || isAnalyzing}
           className="w-48"
         >
-          Analyze Now
+          {isAnalyzing ? "Analyzing..." : "Analyze Now"}
         </Button>
       </div>
 
@@ -195,9 +246,7 @@ const DRDetectionPage = () => {
               </p>
             </div>
           </div>
-          <div className="mt-6">
-            <Button variant="outline">Download Full Report</Button>
-          </div>
+          <DiagnosisDisclaimer />
         </div>
       )}
     </div>

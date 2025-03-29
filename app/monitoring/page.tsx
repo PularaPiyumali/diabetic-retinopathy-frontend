@@ -5,6 +5,7 @@ import { Button } from "../components/ui/button";
 import { Upload } from "lucide-react";
 import Image from "next/image";
 import router from "next/router";
+import DiagnosisDisclaimer from "../components/DiagnosisDisclaimer";
 
 type DrResult = {
   hasDR: boolean;
@@ -26,6 +27,7 @@ type ProgressReport = {
 };
 
 type PatientData = {
+  patientId?: string;
   fullName: string;
   age: string;
   gender: string;
@@ -53,6 +55,9 @@ const DRMonitoringPage = () => {
     general: null,
   });
   const [patientData, setPatientData] = useState<PatientData | null>(null);
+  const [isComparing, setIsComparing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [reportSaved, setReportSaved] = useState(false);
 
   useEffect(() => {
     // Retrieve patient data from session storage
@@ -77,10 +82,12 @@ const DRMonitoringPage = () => {
       if (!validFormats.includes(file.type)) {
         setErrorMessages((prev) => ({
           ...prev,
-          [imageType]: "Please upload a PNG, JPG or JPEG image only.",
+          [imageType]: "Please upload a PNG or JPG image only.",
         }));
         setImage(null);
         setPreview(null);
+        setProgressReport(null);
+        setReportSaved(false);
 
         event.target.value = "";
         return;
@@ -120,6 +127,7 @@ const DRMonitoringPage = () => {
 
       const result = await response.json();
       console.log("Server response data:", result);
+      saveReportToDatabase();
 
       if (result.error) {
         setErrorMessages((prev) => ({
@@ -139,6 +147,45 @@ const DRMonitoringPage = () => {
       }));
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const saveReportToDatabase = async () => {
+    if (!progressReport || !patientData || !patientData.patientId) return;
+
+    setIsSaving(true);
+
+    try {
+      const monitoringData = {
+        patientId: patientData.patientId,
+        patientName: patientData.fullName,
+        diagnosisType: "monitoring",
+        result: progressReport,
+        baselineImageUrl: baselinePreview || "",
+        followUpImageUrl: followUpPreview || "",
+        timestamp: new Date().toISOString(),
+      };
+
+      const response = await fetch("/api/diagnosis", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(monitoringData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setReportSaved(true);
+        console.log("Monitoring report saved successfully");
+      } else {
+        throw new Error(result.error || "Failed to save monitoring report");
+      }
+    } catch (error) {
+      console.error("Error saving monitoring report:", error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -250,7 +297,7 @@ const DRMonitoringPage = () => {
           <p className="text-red-500 text-sm mt-4">{errorMessages.general}</p>
         )}
         <Button
-          onClick={handleCompare}
+          onClick={handleCompare || saveReportToDatabase}
           disabled={!baselineImage || !followUpImage || isLoading}
           className="w-full mt-6"
         >
@@ -323,9 +370,7 @@ const DRMonitoringPage = () => {
               </ul>
             </div>
           </div>
-          <div className="mt-6">
-            <Button variant="outline">Download Full Report</Button>
-          </div>
+          <DiagnosisDisclaimer />
         </div>
       )}
     </div>
