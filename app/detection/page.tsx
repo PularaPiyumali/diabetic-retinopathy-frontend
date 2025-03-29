@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
-import { Activity, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 import Image from "next/image";
 import router from "next/router";
 import DiagnosisDisclaimer from "../components/DiagnosisDisclaimer";
@@ -43,6 +43,13 @@ const DRDetectionPage = () => {
       router.push("/patient-entry");
     }
   }, [router]);
+
+  //useEffect to save diagnosis when result is available
+  useEffect(() => {
+    if (detectionResult && patientData && !diagnosisSaved) {
+      saveDiagnosisToDatabase();
+    }
+  }, [detectionResult, patientData, diagnosisSaved]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -92,15 +99,14 @@ const DRDetectionPage = () => {
         setErrorMessage(result.error);
         console.error("Server returned error:", result.error);
       } else {
-        setDetectionResult({
+        const newResult: DetectionResult = {
           severity: result.severity,
           confidence: result.confidence,
-        });
+        };
 
+        setDetectionResult(newResult);
         setErrorMessage(null);
         console.log("Analysis complete, result set");
-
-        saveDiagnosisToDatabase();
       }
     } catch (error) {
       console.error("Error during analysis:", error);
@@ -111,9 +117,17 @@ const DRDetectionPage = () => {
   };
 
   const saveDiagnosisToDatabase = async () => {
-    if (!detectionResult || !patientData || !patientData.patientId) return;
-
+    if (
+      !detectionResult ||
+      !patientData ||
+      !patientData.patientId ||
+      diagnosisSaved
+    ) {
+      console.log("Not saving: missing data or already saved");
+      return;
+    }
     setIsSaving(true);
+    console.log("Saving diagnosis to database...");
 
     try {
       const diagnosisData = {
@@ -121,6 +135,7 @@ const DRDetectionPage = () => {
         patientName: patientData.fullName,
         diagnosisType: "detection",
         result: detectionResult,
+        imageUrl: previewUrl || "",
         timestamp: new Date().toISOString(),
       };
 
@@ -226,7 +241,7 @@ const DRDetectionPage = () => {
       </div>
       <div className="flex justify-center mt-4">
         <Button
-          onClick={handleAnalyze || saveDiagnosisToDatabase}
+          onClick={handleAnalyze}
           disabled={!selectedFile || isAnalyzing}
           className="w-48"
         >

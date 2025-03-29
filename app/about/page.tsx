@@ -30,37 +30,13 @@ const AboutPage = () => {
           />
         </div>
       </div>
-      {/* <div className="mt-12">
-        <h2 className="text-2xl font-semibold mb-4">Our Team</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            { name: "Dr. Emily Johnson", role: "Chief Medical Officer" },
-            { name: "Michael Chen", role: "AI Research Lead" },
-            { name: "Sarah Thompson", role: "Product Manager" },
-          ].map((member, index) => (
-            <div key={index} className="bg-white shadow-md rounded-lg p-6">
-              <Image
-                src="/placeholder.svg"
-                alt={member.name}
-                width={100}
-                height={100}
-                className="rounded-full mx-auto mb-4"
-              />
-              <h3 className="text-xl font-semibold text-center">
-                {member.name}
-              </h3>
-              <p className="text-gray-600 text-center">{member.role}</p>
-            </div>
-          ))}
-        </div>
-      </div> */}
-      <div className="mt-12">
+      <div className="mt-24 text-center">
         <h2 className="text-2xl font-semibold mb-4">Our Partners</h2>
         <div className="flex flex-wrap justify-center items-center gap-8">
           {[1, 2, 3, 4].map((partner) => (
             <Image
               key={partner}
-              src={`/images/logo${partner}.jpg`} // Change to your actual logo paths
+              src={`/images/logo${partner}.jpg`}
               alt={`Partner ${partner}`}
               width={150}
               height={75}

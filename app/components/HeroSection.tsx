@@ -7,7 +7,7 @@ const HeroSection = () => {
   const router = useRouter();
 
   const handleGetStarted = () => {
-    // Scroll to the PatientAssessmentSection
+    //To the PatientAssessmentSection
     const patientSection = document.getElementById(
       "patient-assessment-section"
     );

@@ -60,7 +60,7 @@ const Footer = () => {
             <ul className="mb-4">
               <li className="mt-2">
                 <a
-                  href="#"
+                  href="https://www.facebook.com/"
                   className="hover:underline text-white hover:text-gray-600"
                 >
                   Facebook
@@ -68,7 +68,7 @@ const Footer = () => {
               </li>
               <li className="mt-2">
                 <a
-                  href="#"
+                  href="https://www.linkedin.com/"
                   className="hover:underline text-white hover:text-gray-600"
                 >
                   LinkedIn
@@ -76,7 +76,7 @@ const Footer = () => {
               </li>
               <li className="mt-2">
                 <a
-                  href="#"
+                  href="https://x.com/"
                   className="hover:underline text-white hover:text-gray-600"
                 >
                   Twitter

@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ChevronDown, ChevronUp } from "lucide-react"
+import { useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const FAQPage = () => {
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const faqs = [
     {
@@ -25,17 +25,17 @@ const FAQPage = () => {
     {
       question: "Is my medical data secure?",
       answer:
-        "Yes, we take data security very seriously. All your medical data is encrypted and stored securely in compliance with HIPAA regulations. We never share your personal information without your explicit consent.",
+        "Yes, we take data security very seriously. All your medical data is encrypted and stored securely. We never share your personal information without your explicit consent.",
     },
     {
       question: "Can I use this service instead of visiting my doctor?",
       answer:
         "No, this service is not a substitute for regular check-ups with your eye care professional. It's designed to be a complementary tool to help with early detection and monitoring between visits.",
     },
-  ]
+  ];
 
   return (
-    <div className="container mx-auto px-6 py-8">
+    <div className="container mx-auto px-6 py-8 mt-16">
       <h1 className="text-3xl font-bold mb-8">Frequently Asked Questions</h1>
       <div className="space-y-4">
         {faqs.map((faq, index) => (
@@ -45,7 +45,11 @@ const FAQPage = () => {
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
             >
               <span className="font-semibold">{faq.question}</span>
-              {openIndex === index ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+              {openIndex === index ? (
+                <ChevronUp className="w-5 h-5" />
+              ) : (
+                <ChevronDown className="w-5 h-5" />
+              )}
             </button>
             {openIndex === index && (
               <div className="p-4 bg-gray-50">
@@ -56,8 +60,7 @@ const FAQPage = () => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default FAQPage
-
+export default FAQPage;

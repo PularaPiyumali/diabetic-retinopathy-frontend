@@ -60,15 +60,21 @@ const DRMonitoringPage = () => {
   const [reportSaved, setReportSaved] = useState(false);
 
   useEffect(() => {
-    // Retrieve patient data from session storage
+    //Retrieve patient data from session storage
     const storedData = sessionStorage.getItem("patientData");
     if (storedData) {
       setPatientData(JSON.parse(storedData));
     } else {
-      // Redirect to patient entry if no data is found
+      //Redirect to patient entry if no data is found
       router.push("/patient-entry");
     }
   }, [router]);
+
+  useEffect(() => {
+    if (progressReport && !reportSaved) {
+      saveReportToDatabase();
+    }
+  }, [progressReport, reportSaved]);
 
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -127,7 +133,6 @@ const DRMonitoringPage = () => {
 
       const result = await response.json();
       console.log("Server response data:", result);
-      saveReportToDatabase();
 
       if (result.error) {
         setErrorMessages((prev) => ({
@@ -138,6 +143,7 @@ const DRMonitoringPage = () => {
       } else {
         setProgressReport(result);
         console.log("Comparison complete, result set");
+        saveReportToDatabase();
       }
     } catch (error) {
       console.error("Error during analysis:", error);
@@ -297,7 +303,7 @@ const DRMonitoringPage = () => {
           <p className="text-red-500 text-sm mt-4">{errorMessages.general}</p>
         )}
         <Button
-          onClick={handleCompare || saveReportToDatabase}
+          onClick={handleCompare}
           disabled={!baselineImage || !followUpImage || isLoading}
           className="w-full mt-6"
         >

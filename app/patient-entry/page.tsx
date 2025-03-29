@@ -98,7 +98,7 @@ const PatientEntryPage = () => {
     setIsSubmitting(true);
 
     try {
-      //Generate a unique patient ID if not exists
+      //Generate a unique patient ID
       const patientId = sessionStorage.getItem("currentPatientId") || uuidv4();
 
       //Prepare patient data with user ID
