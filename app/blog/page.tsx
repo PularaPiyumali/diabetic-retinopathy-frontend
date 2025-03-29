@@ -17,7 +17,7 @@ const BlogPage = () => {
       title: "The Importance of Regular Eye Exams for Diabetic Patients",
       excerpt:
         "Discover why routine eye check-ups are crucial for managing diabetes and preventing vision loss.",
-      date: "Feb 5, 2025",
+      date: "Feb 1, 2025",
       author: "Sarah Thompson",
       slug: "importance-of-regular-eye-exams",
     },
