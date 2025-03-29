@@ -21,7 +21,7 @@ const HeroSection = () => {
       <section className="relative h-[88vh] flex items-center justify-center overflow-hidden rounded-3xl mx-2 shadow-xl">
         <div
           className="absolute z-0 w-full h-full bg-cover bg-center max-w-none rounded-3xl"
-          style={{ backgroundImage: "url('/images/eye-care.jpg')" }}
+          style={{ backgroundImage: "url('/images/hero.jpg')" }}
         >
           <div className="absolute inset-0 bg-black opacity-50 rounded-3xl"></div>
         </div>
