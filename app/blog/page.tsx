@@ -8,16 +8,16 @@ const BlogPage = () => {
       title: "Understanding Diabetic Retinopathy: Symptoms and Risk Factors",
       excerpt:
         "Learn about the early signs of Diabetic Retinopathy and who is at risk for developing this condition.",
-      date: "May 15, 2023",
+      date: "Jan 15, 2025",
       author: "Dr. Emily Johnson",
       slug: "understanding-diabetic-retinopathy",
     },
     {
       image: "post2.jpg",
-      title: "The Importance of Regular Eye Exams for Diabetics",
+      title: "The Importance of Regular Eye Exams for Diabetic Patients",
       excerpt:
         "Discover why routine eye check-ups are crucial for managing diabetes and preventing vision loss.",
-      date: "June 2, 2023",
+      date: "Feb 5, 2025",
       author: "Sarah Thompson",
       slug: "importance-of-regular-eye-exams",
     },
@@ -26,7 +26,7 @@ const BlogPage = () => {
       title: "Advances in AI-Powered Retinal Imaging Systems",
       excerpt:
         "Explore how artificial intelligence is revolutionizing the detection and monitoring of eye diseases.",
-      date: "June 20, 2023",
+      date: "March 20, 2025",
       author: "Michael Chen",
       slug: "advances-in-ai-retinal-imaging",
     },
