@@ -22,7 +22,7 @@ const AboutPage = () => {
         </div>
         <div>
           <Image
-            src="/images/hero-2.jpg"
+            src="/images/blue_man.jpg"
             alt="DR Care Team"
             width={600}
             height={400}
