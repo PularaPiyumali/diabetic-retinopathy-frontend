@@ -14,14 +14,14 @@ const Header = () => {
   const [localUser, setLocalUser] = useState<any>(null);
   const pathname = usePathname();
 
-  // Check if current page is login or signup
+  //Check if current page is login or signup
   const isAuthPage = pathname === "/login" || pathname === "/signup";
 
-  // This effect ensures the component re-renders after mounting
+  //Component re-renders after mounting
   useEffect(() => {
     setMounted(true);
 
-    // Safely check localStorage after component mounts
+    //Check localStorage after component mounts
     if (typeof window !== "undefined") {
       try {
         const storedUser = localStorage.getItem("user");
@@ -34,7 +34,7 @@ const Header = () => {
     }
   }, []);
 
-  // Force a re-render when localStorage changes
+  //Force a re-render when localStorage changes
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -57,7 +57,7 @@ const Header = () => {
     };
   }, []);
 
-  // Don't render user-dependent UI until after hydration
+  //Don't render user-dependent UI until after hydration
   if (!mounted) {
     return (
       <header className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
@@ -78,10 +78,10 @@ const Header = () => {
     );
   }
 
-  // Use either the context user or the localStorage user
+  //Use either the context user or the localStorage user
   const currentUser = user || localUser;
 
-  // Simplified header for login and signup pages
+  //Simplified header for login and signup pages
   if (isAuthPage) {
     return (
       <header className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
@@ -107,12 +107,6 @@ const Header = () => {
             <Link href="/" className="text-black hover:text-gray-700">
               Home
             </Link>
-            {/* <Link href="/detection" className="text-black hover:text-gray-700">
-              DR Detection
-            </Link>
-            <Link href="/monitoring" className="text-black hover:text-gray-700">
-              DR Monitoring
-            </Link> */}
             <Link
               href="/patient-entry"
               className="text-black hover:text-gray-700"

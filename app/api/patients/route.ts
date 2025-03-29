@@ -5,16 +5,16 @@ export async function POST(req: Request) {
   try {
     const patientData = await req.json();
 
-    // Connect to MongoDB
+    //Connect to MongoDB
     const { db } = await connectToDatabase();
 
-    // Add timestamp
+    //Add timestamp
     const patientWithTimestamp = {
       ...patientData,
       createdAt: new Date(),
     };
 
-    // Insert patient data
+    //Insert patient data
     const result = await db
       .collection("patients")
       .insertOne(patientWithTimestamp);

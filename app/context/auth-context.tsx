@@ -23,8 +23,6 @@ type AuthContextType = {
   isLoading: boolean;
 };
 
-// const AuthContext = createContext<AuthContextType | undefined>(undefined)
-
 const AuthContext = createContext<AuthContextType>({
   user: null,
   login: async () => {},
@@ -37,15 +35,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-
-  // useEffect(() => {
-  //   // Check if user is logged in on initial load
-  //   const storedUser = localStorage.getItem("user")
-  //   if (storedUser) {
-  //     setUser(JSON.parse(storedUser))
-  //   }
-  //   setIsLoading(false)
-  // }, [])
 
   useEffect(() => {
     const loadUser = () => {
@@ -69,8 +58,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      // In a real app, you would make an API call to authenticate
-      // For demo purposes, we'll simulate a successful login
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const userData = {
@@ -82,7 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
 
-      // Dispatch a storage event to notify other tabs/components
+      //Dispatch a storage event to notify other tabs/components
       window.dispatchEvent(new Event("storage"));
 
       return userData;
@@ -97,8 +84,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signup = async (name: string, email: string, password: string) => {
     setIsLoading(true);
     try {
-      // In a real app, you would make an API call to register
-      // For demo purposes, we'll simulate a successful registration
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const userData = {
@@ -109,7 +94,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
-      // Dispatch a storage event to notify other tabs/components
+      //Dispatch a storage event to notify other tabs/components
       window.dispatchEvent(new Event("storage"));
       return userData;
     } catch (error) {
@@ -123,7 +108,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     localStorage.removeItem("user");
     setUser(null);
-    // Dispatch a storage event to notify other tabs/components
+    //Dispatch a storage event to notify other tabs/components
     window.dispatchEvent(new Event("storage"));
 
     router.push("/");

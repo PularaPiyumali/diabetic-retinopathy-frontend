@@ -42,7 +42,7 @@ const PatientEntryPage = () => {
       ...prev,
       [name]: value,
     }));
-    // Clear error when user starts typing
+    //Clear error when user starts typing
     if (errors[name as keyof PatientData]) {
       setErrors((prev) => ({
         ...prev,
@@ -98,17 +98,17 @@ const PatientEntryPage = () => {
     setIsSubmitting(true);
 
     try {
-      // Generate a unique patient ID if not exists
+      //Generate a unique patient ID if not exists
       const patientId = sessionStorage.getItem("currentPatientId") || uuidv4();
 
-      // Prepare patient data with user ID
+      //Prepare patient data with user ID
       const patientWithUserId = {
         ...patientData,
         userId: user?.email || "anonymous",
         patientId,
       };
 
-      // Save to MongoDB
+      //Save to MongoDB
       const response = await fetch("/api/patients", {
         method: "POST",
         headers: {
@@ -123,11 +123,11 @@ const PatientEntryPage = () => {
         throw new Error(result.error || "Failed to save patient data");
       }
 
-      // Store patient data and ID in session storage
+      //Store patient data and ID in session storage
       sessionStorage.setItem("patientData", JSON.stringify(patientWithUserId));
       sessionStorage.setItem("currentPatientId", patientId);
 
-      // Navigate to the selected page
+      //Navigate to the selected page
       router.push(`/${destination}`);
     } catch (error) {
       console.error("Error saving patient data:", error);

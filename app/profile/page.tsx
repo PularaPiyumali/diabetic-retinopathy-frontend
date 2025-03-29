@@ -32,10 +32,9 @@ const ProfileContent = () => {
     setSuccessMessage(null);
 
     try {
-      // In a real app, you would make an API call to update the user profile
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Update local storage with new user data
+      //Update local storage with new user data
       const updatedUser = {
         ...user,
         name: formData.name,

@@ -34,7 +34,7 @@ const SignupPage = () => {
       ...prev,
       [name]: value,
     }));
-    // Clear error when user starts typing
+    //Clear error when user starts typing
     if (errors[name as keyof typeof errors]) {
       setErrors((prev) => ({
         ...prev,
@@ -94,11 +94,9 @@ const SignupPage = () => {
     setSignupError(null);
 
     try {
-      // Use the signup function from auth context
+      //Use the signup function from auth context
       await signup(formData.name, formData.email, formData.password);
 
-      // For Next.js 12, we need to use window.location.href instead of router.push
-      // This forces a full page reload which ensures the header shows the logged-in state
       if (typeof window !== "undefined") {
         window.location.href = "/";
       }
@@ -229,7 +227,7 @@ const SignupPage = () => {
           <div>
             <Button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md bg-black text-white border-black hover:bg-gray-800 focus:outline-none focus:ring-black"
+              className="group relative w-full flex justify-center py-2 px-4 border text-sm font-medium rounded-md bg-black text-white border-black hover:bg-gray-800 focus:outline-none focus:ring-black"
               disabled={isLoading}
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-3">

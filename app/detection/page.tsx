@@ -34,12 +34,12 @@ const DRDetectionPage = () => {
   const [diagnosisSaved, setDiagnosisSaved] = useState(false);
 
   useEffect(() => {
-    // Retrieve patient data from session storage
+    //Retrieve patient data from session storage
     const storedData = sessionStorage.getItem("patientData");
     if (storedData) {
       setPatientData(JSON.parse(storedData));
     } else {
-      // Redirect to patient entry if no data is found
+      //Redirect to patient entry if no data is found
       router.push("/patient-entry");
     }
   }, [router]);
@@ -57,7 +57,7 @@ const DRDetectionPage = () => {
       setErrorMessage(null);
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
-      // Reset detection result when a new file is selected
+      //Reset detection result when a new file is selected
       setDetectionResult(null);
       setDiagnosisSaved(false);
     }
