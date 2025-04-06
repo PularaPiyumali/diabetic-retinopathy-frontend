@@ -10,6 +10,7 @@ import DiagnosisDisclaimer from "../components/DiagnosisDisclaimer";
 type DetectionResult = {
   severity: string;
   confidence: number;
+  recommendations: string[];
 };
 
 type PatientData = {
@@ -102,6 +103,7 @@ const DRDetectionPage = () => {
         const newResult: DetectionResult = {
           severity: result.severity,
           confidence: result.confidence,
+          recommendations: result.recommendations || [],
         };
 
         setDetectionResult(newResult);
@@ -260,6 +262,21 @@ const DRDetectionPage = () => {
                 Confidence: {detectionResult.confidence.toFixed(2)}%
               </p>
             </div>
+            {detectionResult.recommendations &&
+              detectionResult.recommendations.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold">Recommendations:</h3>
+                  <ul className="list-disc list-inside">
+                    {detectionResult.recommendations.map(
+                      (recommendation, index) => (
+                        <li key={index} className="text-gray-700">
+                          {recommendation}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              )}
           </div>
           <DiagnosisDisclaimer />
         </div>
